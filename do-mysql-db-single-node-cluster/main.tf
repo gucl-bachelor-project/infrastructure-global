@@ -30,9 +30,9 @@ resource "digitalocean_database_cluster" "mysql-cluster" {
   }
 
   # Disallow Terraform destroying the resources after having created them
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  # prevent_destroy = true
+  # }
 }
 
 # ------------------------------------------------------------------------------
@@ -53,9 +53,9 @@ resource "digitalocean_database_db" "database" {
   name       = each.key
 
   # Disallow Terraform destroying the resources after having created them
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  # prevent_destroy = true
+  # }
 }
 
 # ------------------------------------------------------------------------------
