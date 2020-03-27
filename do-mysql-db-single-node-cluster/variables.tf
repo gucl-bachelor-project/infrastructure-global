@@ -17,17 +17,17 @@ variable "cluster_maintenance_window" {
     day  = "sunday"
     hour = "00:00:00"
   }
-  description = "Time of week when DigitalOcean can maintain the cluster with updates, fixes, etc. Defaults to sunday at midnight."
+  description = "Time of week when DigitalOcean can maintain the cluster with updates, fixes, etc. Defaults to Sunday at midnight."
 }
 
 variable "allowed_droplet_tags" {
   type        = list(string)
-  description = "List of tags (that can be assigned to DigitalOcean droplets) that provide access to the cluster"
+  description = "List of tags (that can be assigned to DigitalOcean droplets) that provide access to the DB cluster"
 }
 
 variable "dbs" {
   type        = list(string)
-  description = "List of databases (with its name) to create in cluster"
+  description = "List of MySQL databases (with its name) to create in cluster"
 }
 
 variable "db_size" {

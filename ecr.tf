@@ -1,5 +1,5 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# DEPLOY AMAZON ECRs USED AS CONTAINER IMAGE REPOSITORIES
+# DEPLOY AMAZON ECRs USED AS DOCKER IMAGE REPOSITORIES
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 locals {
@@ -19,7 +19,7 @@ resource "aws_ecr_repository" "ecr_repositories" {
   image_tag_mutability = "MUTABLE" # Allow override of tags
 }
 
-output "image_registries" {
+output "image_repositories" {
   value       = aws_ecr_repository.ecr_repositories
   description = "All ECR repositories"
 }

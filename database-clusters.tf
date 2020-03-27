@@ -1,6 +1,28 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# DATABASE CLUSTERS FOR APPLICATIONS
+# DATABASE CLUSTERS FOR DIFFERENT ENVIRONMENTS OF APPLICATION
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ------------------------------------------------------------------------------
+# MAP OF TAGS TO ASSIGN TO DIGITALOCEAN DROPLETS THAT SHOULD HAVE ACCESS TO
+# ENVIRONMENT-SPECIFIC DB CLUSTER
+# ------------------------------------------------------------------------------
+locals {
+  db_access_host_tags = {
+    production  = "db-access-app-production"
+    staging     = "db-access-app-staging"
+    development = "db-access-app-development"
+  }
+}
+
+# ------------------------------------------------------------------------------
+# DEPLOY TAGS THAT CAN BE ASSIGNED TO DIGITALOCEAN DROPLETS THAT SHOULD HAVE
+# ACCESS TO ENVIRONMENT-SPECIFIC DB CLUSTER
+# ------------------------------------------------------------------------------
+resource "digitalocean_tag" "allowed_droplet_tags" {
+  for_each = local.db_access_host_tags
+
+  name = each.value
+}
 
 # ------------------------------------------------------------------------------
 # DB CLUSTER FOR PRODUCTION ENVIRONMENT
@@ -14,7 +36,7 @@ module "production_db" {
     day  = "friday"
     hour = "23:59:59"
   }
-  allowed_droplet_tags = ["db-access-app-production"]
+  allowed_droplet_tags = [digitalocean_tag.allowed_droplet_tags["production"].name]
   dbs                  = ["app-db-1", "app-db-2"]
   db_size              = "nano"
 }
@@ -27,7 +49,7 @@ module "staging_db" {
 
   cluster_name         = "bproject-staging-db"
   cluster_region       = var.do_region
-  allowed_droplet_tags = ["db-access-app-staging"]
+  allowed_droplet_tags = [digitalocean_tag.allowed_droplet_tags["staging"].name]
   dbs                  = ["app-db-1", "app-db-2"]
   db_size              = "nano"
 }
@@ -40,7 +62,7 @@ module "development_db" {
 
   cluster_name         = "bproject-dev-db"
   cluster_region       = var.do_region
-  allowed_droplet_tags = ["db-access-app-development"]
+  allowed_droplet_tags = [digitalocean_tag.allowed_droplet_tags["development"].name]
   dbs                  = ["app-db-1", "app-db-2"]
   db_size              = "nano"
 }
@@ -52,4 +74,13 @@ output "db_clusters" {
     development = module.development_db
   }
   description = "DigitalOcean DB clusters for all environments"
+}
+
+output "db_allowed_droplet_tags" {
+  value = {
+    production  = digitalocean_tag.allowed_droplet_tags["production"]
+    staging     = digitalocean_tag.allowed_droplet_tags["staging"]
+    development = digitalocean_tag.allowed_droplet_tags["development"]
+  }
+  description = "Tags that can be assigned to DigitalOcean Droplets that should have access to environment-specific DB cluster"
 }

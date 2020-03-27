@@ -16,6 +16,9 @@ provider "digitalocean" {
   token = var.do_api_token
 }
 
+# ------------------------------------------------------------------------------
+# DEPLOY REMOTE TERRAFORM STATE BACKEND
+# ------------------------------------------------------------------------------
 module "s3_backend" {
   source = "./s3-backend"
 

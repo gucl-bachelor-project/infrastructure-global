@@ -34,7 +34,7 @@ resource "aws_route53_record" "www" {
 }
 
 # ------------------------------------------------------------------------------
-# OUTPUT URL OF STAGING AND PRODUCTION APP TO BE SET IN STATE
+# OUTPUT URLS FOR STAGING AND PRODUCTION APP
 # ------------------------------------------------------------------------------
 output "staging_app_url" {
   value       = aws_route53_record.www["staging"].name

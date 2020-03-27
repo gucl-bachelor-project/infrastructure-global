@@ -1,5 +1,5 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# DATA FOR PRODUCTION ENVIRONMENT
+# RESOURCES TO PERSIST APPLICATION DATA
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ resource "digitalocean_volume" "prod_log_block_storage" {
 resource "aws_s3_bucket" "app_docker_composes_bucket" {
   bucket = "gkc-bproject-app-docker-composes"
 
-  # Enables full revision history of the Docker compose files
+  # Enables full revision history of the Docker Compose files
   versioning {
     enabled = true
   }

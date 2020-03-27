@@ -1,10 +1,10 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# SINGLE NODE MYSQL DB CLUSTER IN DIGITALOCEAN THAT CANNOT BE DESTROYED BY TERRAFORM ONCE CREATED
-# Includes databases and user for application access
+# SINGLE NODE MYSQL DB CLUSTER IN DIGITALOCEAN
+# Includes databases and DB user for application access
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ------------------------------------------------------------------------------
-# TRANSLATION OF CUSTOM DB SIZE TO VALID DB SIZE IN DIGITALOCEAN
+# MAP OF CUSTOM DB SIZES TO VALID DB SIZE IN DIGITALOCEAN
 # ------------------------------------------------------------------------------
 locals {
   db_sizes = {
@@ -17,7 +17,7 @@ locals {
 # ------------------------------------------------------------------------------
 # CREATE MYSQL DB CLUSTER
 # ------------------------------------------------------------------------------
-resource "digitalocean_database_cluster" "mysql-cluster" {
+resource "digitalocean_database_cluster" "mysql_cluster" {
   name       = var.cluster_name
   engine     = "mysql"
   version    = "8"
@@ -29,7 +29,7 @@ resource "digitalocean_database_cluster" "mysql-cluster" {
     hour = var.cluster_maintenance_window.hour
   }
 
-  # Disallow Terraform destroying the resources after having created them
+  # Uncomment to disallow Terraform destroying the resources after having created them
   # lifecycle {
   # prevent_destroy = true
   # }
@@ -39,20 +39,20 @@ resource "digitalocean_database_cluster" "mysql-cluster" {
 # CREATE APPLICATION USER FOR DB CLUSTER
 # ------------------------------------------------------------------------------
 resource "digitalocean_database_user" "app_db_user" {
-  cluster_id = digitalocean_database_cluster.mysql-cluster.id
+  cluster_id = digitalocean_database_cluster.mysql_cluster.id
   name       = "app-user"
 }
 
 # ------------------------------------------------------------------------------
 # CREATE DATABASES IN DB CLUSTER
 # ------------------------------------------------------------------------------
-resource "digitalocean_database_db" "database" {
+resource "digitalocean_database_db" "databases" {
   for_each = toset(var.dbs)
 
-  cluster_id = digitalocean_database_cluster.mysql-cluster.id
+  cluster_id = digitalocean_database_cluster.mysql_cluster.id
   name       = each.key
 
-  # Disallow Terraform destroying the resources after having created them
+  # Uncomment to disallow Terraform destroying the resources after having created them
   # lifecycle {
   # prevent_destroy = true
   # }
@@ -60,9 +60,10 @@ resource "digitalocean_database_db" "database" {
 
 # ------------------------------------------------------------------------------
 # CREATE FIREWALL FOR DB CLUSTER
+# Only allow DigitalOcean Droplets with specific tags to access DB cluster
 # ------------------------------------------------------------------------------
 resource "digitalocean_database_firewall" "cluster_firewall" {
-  cluster_id = digitalocean_database_cluster.mysql-cluster.id
+  cluster_id = digitalocean_database_cluster.mysql_cluster.id
 
   dynamic "rule" {
     for_each = toset(var.allowed_droplet_tags)
