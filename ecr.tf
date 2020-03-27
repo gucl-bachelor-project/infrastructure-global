@@ -6,13 +6,14 @@ locals {
   business_logic_repos = ["bl-main-app", "bl-support-app"]
   logging_repos        = ["logging-app"]
   db_repos             = ["db-access-app", "db-access-admin-app"]
+  web_server_repos     = ["nginx"]
 }
 
 # ------------------------------------------------------------------------------
 # CREATE ALL ECR REPOSITORIES DEFINED IN THE GROUPS IN 'locals'
 # ------------------------------------------------------------------------------
 resource "aws_ecr_repository" "ecr_repositories" {
-  for_each = toset(concat(local.business_logic_repos, local.logging_repos, local.db_repos))
+  for_each = toset(concat(local.business_logic_repos, local.logging_repos, local.db_repos, local.web_server_repos))
 
   name                 = "bproject-${each.key}"
   image_tag_mutability = "MUTABLE" # Allow override of tags
