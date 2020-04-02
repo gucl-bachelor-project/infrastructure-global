@@ -3,6 +3,9 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 locals {
+  ecr_base_url = replace(aws_ecr_repository.ecr_repositories["bl-main-app"].repository_url, "/${aws_ecr_repository.ecr_repositories["bl-main-app"].name}", "")
+
+  # ECR repos
   business_logic_repos = ["bl-main-app", "bl-support-app"]
   logging_repos        = ["logging-app"]
   db_repos             = ["db-access-app", "db-access-admin-app"]
@@ -25,11 +28,9 @@ output "image_repositories" {
 }
 
 output "ecr_base_url" {
-  value       = replace(aws_ecr_repository.ecr_repositories["bl-main-app"].repository_url, "/${aws_ecr_repository.ecr_repositories["bl-main-app"].name}", "")
+  value       = local.ecr_base_url
   description = "Base URL of ECR repositories (registry URL without registry ID). Example: '468374654130.dkr.ecr.eu-central-1.amazonaws.com'"
 }
-
-data "aws_region" "current" {}
 
 output "ecr_region" {
   value       = data.aws_region.current

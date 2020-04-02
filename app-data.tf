@@ -33,8 +33,3 @@ output "app_docker_composes_bucket_id" {
   value       = aws_s3_bucket.app_docker_composes_bucket.id
   description = "ID of S3 bucket"
 }
-
-output "prod_log_data_block_storage" {
-  value       = digitalocean_volume.prod_log_block_storage
-  description = "ID of DO block storage device to use for log data in production environment"
-}
