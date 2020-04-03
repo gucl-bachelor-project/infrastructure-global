@@ -35,26 +35,31 @@ resource "aws_route53_record" "www" {
 # tier in production environment receiving the incoming traffic from clients.
 # ------------------------------------------------------------------------------
 resource "digitalocean_domain" "domain" {
-  name = aws_route53_record.www["production"].name
+  name = aws_route53_record.www.name
 }
 
 resource "digitalocean_record" "www" {
   domain = digitalocean_domain.domain.name
   type   = "A"
   name   = "@"
-  value  = digitalocean_floating_ip.floating_ips["prod_app_ip"]
+  value  = digitalocean_floating_ip.prod_app_ip.ip_address
 }
 
 # ------------------------------------------------------------------------------
 # DEPLOY FLOATING IPs FOR APPLICATION
 # ------------------------------------------------------------------------------
-resource "digitalocean_floating_ip" "floating_ips" {
-  for_each = toset(["prod_app_ip", "logging_app_ip"])
+resource "digitalocean_floating_ip" "prod_app_ip" {
+  region = var.do_region
+}
 
+resource "digitalocean_floating_ip" "logging_app_ip" {
   region = var.do_region
 }
 
 output "app_ips" {
-  value       = digitalocean_floating_ip.floating_ips
+  value = {
+    prod_app_ip    = digitalocean_floating_ip.prod_app_ip
+    logging_app_ip = digitalocean_floating_ip.logging_app_ip
+  }
   description = "Floating IPv4 addresses for application"
 }

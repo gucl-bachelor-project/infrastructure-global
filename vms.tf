@@ -49,6 +49,6 @@ resource "digitalocean_volume_attachment" "logging_data_block_attachment" {
 # ASSIGN FLOATING IP TO LOGGING APP VM
 # ------------------------------------------------------------------------------
 resource "digitalocean_floating_ip_assignment" "logging_app_floating_ip_assignment" {
-  ip_address = digitalocean_floating_ip.floating_ips["logging_app_ip"].ip_address
+  ip_address = digitalocean_floating_ip.logging_app_ip.ip_address
   droplet_id = module.logging_vm.id
 }
