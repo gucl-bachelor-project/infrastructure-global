@@ -1,6 +1,7 @@
 # infrastructure-global
 
 TODO:
+- AWS region: eu-central-1
 - Required IAM user:
   - AmazonS3FullAccess
   - AmazonRoute53FullAccess
