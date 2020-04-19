@@ -74,7 +74,7 @@ jobs:
       - *attach_working_directory
       - run:
           name: Plan
-          command: terraform plan -out=terraform.plan -var "do_api_token=$DO_API_TOKEN" -var "logging_app_os_image_id=$LOGGING_APP_OS_IMAGE_ID" -var "vm_user_aws_access_key_id=$VM_USER_AWS_ACCESS_KEY_ID" -var "vm_user_aws_secret_access_key=$VM_USER_AWS_SECRET_ACCESS_KEY"
+          command: terraform plan -out=terraform.plan -var "do_api_token=$DO_API_TOKEN" -var "vm_user_aws_access_key_id=$VM_USER_AWS_ACCESS_KEY_ID" -var "vm_user_aws_secret_access_key=$VM_USER_AWS_SECRET_ACCESS_KEY"
       - run:
           name: Save plan in plain format
           command: |
