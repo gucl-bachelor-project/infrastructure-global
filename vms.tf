@@ -3,13 +3,22 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ------------------------------------------------------------------------------
+# REFERENCE BAKED OS IMAGE TO BOOT VMs ON
+# ------------------------------------------------------------------------------
+data "digitalocean_droplet_snapshot" "base_snapshot" {
+  name_regex  = "^gkc-bproject-packer"
+  region      = "fra1"
+  most_recent = true
+}
+
+# ------------------------------------------------------------------------------
 # DEPLOY VM FOR LOGGING APPLICATION
 # ------------------------------------------------------------------------------
 module "logging_vm" {
   source = "github.com/gucl-bachelor-project/infrastructure-modules//do-application-vm?ref=v1.0.0"
 
   vm_name             = "logging"
-  boot_image_id       = var.logging_app_os_image_id
+  boot_image_id       = data.digitalocean_droplet_snapshot.base_snapshot.id
   do_region           = var.do_region
   do_vm_size          = "s-1vcpu-1gb" # Micro
   authorized_ssh_keys = digitalocean_ssh_key.ssh_keys
