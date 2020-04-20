@@ -27,6 +27,8 @@ resource "aws_s3_bucket" "app_docker_composes_bucket" {
   versioning {
     enabled = true
   }
+  #tfsec:ignore:AWS002
+  #tfsec:ignore:AWS017
 }
 
 output "app_docker_composes_bucket_id" {
