@@ -31,6 +31,48 @@ module "logging_vm" {
 }
 
 # ------------------------------------------------------------------------------
+# DEPLOY AND ASSIGN FIREWALL FOR LOGGING APP VM
+# ------------------------------------------------------------------------------
+resource "digitalocean_firewall" "logging_app_vm_firewall" {
+  name = "logging-app-vm-firewall"
+
+  droplet_ids = [module.logging_vm.id]
+
+  # All SSH access allowed
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  # All inbound TCP traffic allowed for Droplet with tag that gives
+  # access to host
+  inbound_rule {
+    protocol    = "tcp"
+    port_range  = "1-65535"
+    source_tags = [digitalocean_tag.logging_access_allowed_droplet_tag.name]
+  }
+
+  # All outbound TCP/UDP/ICMP traffic traffic
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
+
+# ------------------------------------------------------------------------------
 # CLOUD INIT CONFIG SCRIPT TO START THE LOGGING APPLICATION ON VM.
 # To be run when the VM boots for the first time.
 # ------------------------------------------------------------------------------
@@ -60,4 +102,17 @@ resource "digitalocean_volume_attachment" "logging_data_block_attachment" {
 resource "digitalocean_floating_ip_assignment" "logging_app_floating_ip_assignment" {
   ip_address = digitalocean_floating_ip.logging_app_ip.ip_address
   droplet_id = module.logging_vm.id
+}
+
+# ------------------------------------------------------------------------------
+# DEPLOY TAG THAT CAN BE ASSIGNED TO DIGITALOCEAN DROPLETS THAT SHOULD HAVE
+# ACCESS TO LOGGING APP VM
+# ------------------------------------------------------------------------------
+resource "digitalocean_tag" "logging_access_allowed_droplet_tag" {
+  name = "logging-app-vm-access"
+}
+
+output "logging_app_allowed_droplet_tag_name" {
+  value       = digitalocean_tag.logging_access_allowed_droplet_tag.name
+  description = "Tags that can be assigned to DigitalOcean Droplets that should have access to logging app Droplet"
 }
