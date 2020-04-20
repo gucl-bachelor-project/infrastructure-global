@@ -49,6 +49,15 @@ jobs:
           paths:
             - .terraform
 
+  format:
+    <<: *defaults
+    steps:
+      - *restore_repo
+      - *attach_working_directory
+      - run:
+          name: Format
+          command: terraform fmt -check -recursive
+
   validate:
     <<: *defaults
     steps:
@@ -58,14 +67,17 @@ jobs:
           name: Validate
           command: terraform validate
 
-  format:
-    <<: *defaults
+  static-analysis:
+    working_directory: /workdir
+    docker:
+      - image: wesleydeanflexion/tfsec
     steps:
-      - *restore_repo
-      - *attach_working_directory
+      - checkout
+      - attach_workspace:
+          at: /workdir
       - run:
-          name: Format
-          command: terraform -check -recursive
+          name: Static code analyis
+          command: tfsec .
 
   plan:
     <<: *defaults
@@ -115,7 +127,13 @@ workflows:
       - init:
           requires:
             - checkout
+      - format:
+          requires:
+            - init
       - validate:
+          requires:
+            - init
+      - static-analysis:
           requires:
             - init
       - plan:
