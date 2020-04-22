@@ -77,7 +77,7 @@ resource "digitalocean_firewall" "logging_app_vm_firewall" {
 # To be run when the VM boots for the first time.
 # ------------------------------------------------------------------------------
 data "template_file" "logging_app_bootstrap_config" {
-  template = file("${path.module}/app-start-scripts/logging-app-bootstrap.tpl")
+  template = file("${path.module}/vm-config-scripts/logging-vm-config.tpl")
 
   vars = {
     ecr_base_url                 = local.ecr_base_url
