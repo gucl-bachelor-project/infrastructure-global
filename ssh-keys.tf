@@ -1,9 +1,9 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# REGISTER SSH KEYS FOR APPLICATION VM ACCESS 
+# SSH KEYS THAT MUST HAVE ACCESS TO VMS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-resource "digitalocean_ssh_key" "ssh_keys" {
+resource "digitalocean_ssh_key" "vm_ssh_keys" {
   for_each = {
-    "gkc-macbook" = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs+yErYPSUsX+uwn7nbo7xzzqBLADGPyhsOwwZ+g/Mqxw24P8qo4YG/Ypza62fIxwmmoOnXpDFemSDaU4w0N0XTODnLkjaxpc4g/fT6b7AlTyUKZLv75piYqC7qhnZmtP/USUvHBiE5KDBTSryFPX0WtGRLoE1H/ucpGqKsPDabp2EAW7PfF5c9x6THwvwfetpngwoJr2i/XV3BZsOZgGhxsPKLnqhwy2tQsE/8yxEhGgPerYq5H0OC+btcv9dDa0dyVojGmFwlM2AjbhnyGIefSvkpQW9m1bItcTevTKlI9f2AcOwZpq+YVMQ89/SGSeRqcTC3OnFKVMhPAbtQrfh gustavkc@Gustavs-MacBook-Pro.local"
+    "gucl-macbook" = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkakaejSIEI9KEQbHu+0waIYpNsin0Bg5VShXa8ORE00kpGCR+wN3sceACnSkqSYwpK8Ih2y2WIHPdDR6tr9YpiNYL6jjnI4WknEv5jZZU9kmI+N1bP4mxQS3G6Mt/PMla/pG55DLoG5ocSM4abkToddl2nsRBG826RTJg0SzzDsKYCXBki+BF8AdR0ViLKnQjHNK0vO6BHQ4ypDa7/9UPS4+B2LkDeZqQn+0aq8+dqsfWnb4MU1cFJM6wTwKZCgjH+O+Y5CuxQPsVYtPeD5o432461rJmnV1TD7XRq9bHtlpHA6O/nfhFz9UxBiR7XeQ/AnXcYOlH2OXYrxbb6Ka1 gustavclausen@Gustavs-MacBook-Pro.local"
   }
 
   name       = each.key
