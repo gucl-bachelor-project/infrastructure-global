@@ -5,15 +5,5 @@ variable "do_api_token" {
 
 variable "do_region" {
   default     = "fra1"
-  description = "Region to place DigitalOcean resources in"
-}
-
-variable "vm_user_aws_access_key_id" {
-  type        = string
-  description = "AWS access key ID of user to use on application VM"
-}
-
-variable "vm_user_aws_secret_access_key" {
-  type        = string
-  description = "AWS access key secret of user to use on application VM"
+  description = "Region to deploy DigitalOcean resources in"
 }
