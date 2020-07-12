@@ -55,7 +55,7 @@ resource "digitalocean_volume_attachment" "logging_vm_block_storage_attachment" 
 # To be run when the VM boots for the first time.
 # ------------------------------------------------------------------------------
 data "template_file" "logging_vm_bootstrap_config" {
-  template = file("${path.module}/vm-config-scripts/logging-vm-config.tpl")
+  template = file("${path.module}/vm-config-scripts/logging-server-config.tpl")
 
   vars = {
     ecr_base_url                 = local.ecr_registry_base_url
