@@ -31,6 +31,15 @@ output "app_docker_compose_files_bucket_id" {
 output "iam_app_vm_user_credentials" {
   value       = aws_iam_access_key.app_vm_user_access_key
   description = "Credentials for IAM user to be used to access AWS services on application VMs"
+  sensitive   = true # Value not shown in CLI output
+}
+
+# ------------------------------------------------------------------------------
+# SSH KEYS
+# ------------------------------------------------------------------------------
+output "registered_ssh_keys_names" {
+  value       = [for ssh_key in digitalocean_ssh_key.vm_ssh_keys : ssh_key.name]
+  description = "List of names for registered SSH keys (in DigitalOcean) that should have SSH access to the deployed VMs"
 }
 
 # ------------------------------------------------------------------------------
@@ -67,8 +76,8 @@ output "db_allowed_droplet_tags" {
 # ------------------------------------------------------------------------------
 output "ips" {
   value = {
-    prod_website = digitalocean_floating_ip.prod_website.ip_address
-    logging_vm   = digitalocean_floating_ip.logging_vm.ip_address
+    prod_website   = digitalocean_floating_ip.prod_website.ip_address
+    logging_server = digitalocean_floating_ip.logging_vm.ip_address
   }
   description = "IPv4 addresses for application"
 }
