@@ -138,7 +138,9 @@ workflows:
             - init
       - plan:
           requires:
+            - format
             - validate
+            - static-analysis
       - pr-comment:
           requires:
             - plan
