@@ -46,6 +46,10 @@ resource "aws_ecr_repository" "ecr_repositories" {
 
   name                 = "bproject-${each.key}"
   image_tag_mutability = "MUTABLE" # Allow override of Docker tags
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 # ------------------------------------------------------------------------------
