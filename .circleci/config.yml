@@ -1,6 +1,6 @@
 version: 2.1
 
-base_image: &base_image hashicorp/terraform:0.12.21
+base_image: &base_image hashicorp/terraform:0.12.28
 
 working_directory: &working_directory ~/terraform
 

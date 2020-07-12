@@ -1,6 +1,7 @@
 # infrastructure-global
 
 TODO:
+- Terraform: 0.12.28
 - AWS region: eu-central-1
 - Required IAM user:
   - AmazonS3FullAccess
