@@ -6,13 +6,13 @@
 # DEPLOY VM FOR LOGGING APP
 # ------------------------------------------------------------------------------
 module "logging_vm" {
-  source = "github.com/gucl-bachelor-project/infrastructure-modules//do-application-vm?ref=v1.0.0"
+  source = "github.com/gucl-bachelor-project/infrastructure-modules//do-application-vm?ref=v1.0.1"
 
   vm_name             = "logging"
   boot_image_id       = data.digitalocean_droplet_snapshot.base_snapshot.id
   do_region           = var.do_region
   do_vm_size          = "s-1vcpu-1gb" # Micro
-  authorized_ssh_keys = digitalocean_ssh_key.vm_ssh_keys
+  authorized_ssh_keys = [for ssh_key in digitalocean_ssh_key.vm_ssh_keys : ssh_key]
   app_start_script    = data.template_file.logging_vm_bootstrap_config.rendered
   aws_config = {
     region            = data.aws_region.current.name
