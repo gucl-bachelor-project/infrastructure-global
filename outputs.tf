@@ -3,7 +3,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ------------------------------------------------------------------------------
-# ARTIFACT REPOSITORIES
+# DOCKER REGISTRY
 # ------------------------------------------------------------------------------
 output "ecr_repositories" {
   value       = aws_ecr_repository.ecr_repositories
@@ -20,18 +20,17 @@ output "ecr_region" {
   description = "AWS region where ECR registry is hosted"
 }
 
-output "app_docker_compose_files_bucket_id" {
-  value       = aws_s3_bucket.app_docker_composes_bucket.id
-  description = "ID of S3 bucket"
+# ------------------------------------------------------------------------------
+# PROJECT BUCKET ON DIGITALOCEAN SPACES
+# ------------------------------------------------------------------------------
+output "project_bucket_name" {
+  value       = digitalocean_spaces_bucket.project_bucket.name
+  description = "The name of the project's DigitalOcean Spaces bucket"
 }
 
-# ------------------------------------------------------------------------------
-# CREDENTIALS
-# ------------------------------------------------------------------------------
-output "iam_app_vm_user_credentials" {
-  value       = aws_iam_access_key.app_vm_user_access_key
-  description = "Credentials for IAM user to be used to access AWS services on application VMs"
-  sensitive   = true # Value not shown in CLI output
+output "project_bucket_region" {
+  value       = digitalocean_spaces_bucket.project_bucket.region
+  description = "The slug of the region where the project's DigitalOcean Spaces bucket is stored. Example: 'ams3'"
 }
 
 # ------------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ARTIFACT REPOSITORIES FOR APPLICATION.
-# - Deploy Amazon ECR repositories used as a Docker image registry.
-# - Deploy Amazon S3 bucket for Docker Compose files used in different subsystems of the application.
+# DOCKER REGISTRY FOR APPLICATION.
+# Deploy Amazon ECR repositories used as a Docker image registry.
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 locals {
@@ -50,28 +49,4 @@ resource "aws_ecr_repository" "ecr_repositories" {
   image_scanning_configuration {
     scan_on_push = true
   }
-}
-
-# ------------------------------------------------------------------------------
-# DEPLOY AMAZON S3 BUCKET FOR DOCKER COMPOSE FILES AND CONFIGURE IT TO
-# BLOCK PUBLIC ACCESS
-# ------------------------------------------------------------------------------
-resource "aws_s3_bucket" "app_docker_composes_bucket" {
-  bucket = "bproject-app-docker-composes"
-
-  # Enables full revision history of the Docker Compose files
-  versioning {
-    enabled = true
-  }
-  #tfsec:ignore:AWS002
-  #tfsec:ignore:AWS017
-}
-
-resource "aws_s3_bucket_public_access_block" "app_docker_compose_files_bucket_block" {
-  bucket = aws_s3_bucket.app_docker_composes_bucket.id
-
-  block_public_policy     = true
-  block_public_acls       = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
 }

@@ -32,8 +32,8 @@ resource "aws_route53_record" "www" {
 # ------------------------------------------------------------------------------
 # CREATE DOMAIN AND RECORDS IN DIGITALOCEAN.
 # A 'A'-record is created in the domain config and pointed to floating IP for
-# VM in application tier (i.e. the server hosting the business logic subsystem)
-# in production environment receiving the incoming traffic from clients.
+# Application server in production environment receiving the incoming traffic
+# from clients.
 # ------------------------------------------------------------------------------
 resource "digitalocean_domain" "domain" {
   name = aws_route53_record.www.name

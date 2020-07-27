@@ -24,7 +24,3 @@ runcmd:
   - echo '/dev/disk/by-id/scsi-0DO_Volume_${block_storage_name} /mnt/${block_storage_mount_name} ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab
   # Create directories (if it does not exist) on block storage for logging data
   - mkdir -p $MONGODB_FILES_PATH
-  # Download Docker Compose files for application from S3 bucket
-  - aws s3 cp s3://${app_docker_compose_bucket_id}/logging/ /usr/local/app/ --recursive
-  # Setup app and start it
-  - start-application -r ${ecr_base_url}

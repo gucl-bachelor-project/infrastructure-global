@@ -16,13 +16,18 @@ terraform {
 # ------------------------------------------------------------------------------
 provider "digitalocean" {
   token = var.do_api_token
+
+  spaces_access_id  = var.do_spaces_access_key_id
+  spaces_secret_key = var.do_spaces_secret_access_key
 }
 
 # ------------------------------------------------------------------------------
 # SET UP AWS PROVIDER
 # ------------------------------------------------------------------------------
 provider "aws" {
-  region = "eu-central-1"
+  region     = "eu-central-1"
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
 }
 
 # ------------------------------------------------------------------------------

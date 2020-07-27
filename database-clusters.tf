@@ -24,7 +24,7 @@ resource "digitalocean_tag" "db_allowed_droplet_tags" {
 # DB CLUSTER FOR PRODUCTION ENVIRONMENT
 # ------------------------------------------------------------------------------
 module "production_db" {
-  source = "./do-mysql-db-single-node-cluster"
+  source = "github.com/gucl-bachelor-project/infrastructure-modules//do-mysql-db-cluster?ref=v2.0.0"
 
   cluster_name   = "bproject-prod-db"
   cluster_region = var.do_region
@@ -32,33 +32,34 @@ module "production_db" {
     day  = "friday"
     hour = "23:59:59"
   }
-  allowed_droplet_tags = [digitalocean_tag.db_allowed_droplet_tags["production"].name]
-  dbs                  = ["app-db-1", "app-db-2"]
-  db_size              = "nano"
+  allowed_access_droplet_tags = [digitalocean_tag.db_allowed_droplet_tags["production"].name]
+  dbs                         = ["app-db-1", "app-db-2"]
+  db_size                     = "nano"
+  node_count                  = 1
 }
 
 # ------------------------------------------------------------------------------
 # DB CLUSTER FOR STAGING ENVIRONMENT
 # ------------------------------------------------------------------------------
 module "staging_db" {
-  source = "./do-mysql-db-single-node-cluster"
+  source = "github.com/gucl-bachelor-project/infrastructure-modules//do-mysql-db-cluster?ref=v2.0.0"
 
-  cluster_name         = "bproject-staging-db"
-  cluster_region       = var.do_region
-  allowed_droplet_tags = [digitalocean_tag.db_allowed_droplet_tags["staging"].name]
-  dbs                  = ["app-db-1", "app-db-2"]
-  db_size              = "nano"
+  cluster_name                = "bproject-staging-db"
+  cluster_region              = var.do_region
+  allowed_access_droplet_tags = [digitalocean_tag.db_allowed_droplet_tags["staging"].name]
+  dbs                         = ["app-db-1", "app-db-2"]
+  db_size                     = "nano"
 }
 
 # ------------------------------------------------------------------------------
 # DB CLUSTER FOR DEVELOPMENT ENVIRONMENT
 # ------------------------------------------------------------------------------
 module "development_db" {
-  source = "./do-mysql-db-single-node-cluster"
+  source = "github.com/gucl-bachelor-project/infrastructure-modules//do-mysql-db-cluster?ref=v2.0.0"
 
-  cluster_name         = "bproject-dev-db"
-  cluster_region       = var.do_region
-  allowed_droplet_tags = [digitalocean_tag.db_allowed_droplet_tags["development"].name]
-  dbs                  = ["app-db-1", "app-db-2"]
-  db_size              = "nano"
+  cluster_name                = "bproject-dev-db"
+  cluster_region              = var.do_region
+  allowed_access_droplet_tags = [digitalocean_tag.db_allowed_droplet_tags["development"].name]
+  dbs                         = ["app-db-1", "app-db-2"]
+  db_size                     = "nano"
 }

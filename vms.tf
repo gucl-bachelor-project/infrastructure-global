@@ -6,19 +6,21 @@
 # DEPLOY VM FOR LOGGING APP
 # ------------------------------------------------------------------------------
 module "logging_vm" {
-  source = "github.com/gucl-bachelor-project/infrastructure-modules//do-application-vm?ref=v1.0.1"
+  source = "github.com/gucl-bachelor-project/infrastructure-modules//do-application-vm?ref=v2.0.0"
 
-  vm_name             = "logging"
-  boot_image_id       = data.digitalocean_droplet_snapshot.base_snapshot.id
-  do_region           = var.do_region
-  do_vm_size          = "s-1vcpu-1gb" # Micro
-  authorized_ssh_keys = [for ssh_key in digitalocean_ssh_key.vm_ssh_keys : ssh_key]
-  app_start_script    = data.template_file.logging_vm_bootstrap_config.rendered
-  aws_config = {
-    region            = data.aws_region.current.name
-    access_key_id     = aws_iam_access_key.app_vm_user_access_key.id
-    secret_access_key = aws_iam_access_key.app_vm_user_access_key.secret
-  }
+  vm_name                   = "logging"
+  boot_image_id             = data.digitalocean_droplet_snapshot.base_snapshot.id
+  do_region                 = var.do_region
+  do_vm_size                = "s-1vcpu-1gb" # Micro
+  authorized_ssh_keys       = [for ssh_key in digitalocean_ssh_key.vm_ssh_keys : ssh_key]
+  pvt_key                   = var.pvt_key
+  do_spaces_access_key      = var.do_spaces_access_key_id
+  do_spaces_secret_key      = var.do_spaces_secret_access_key
+  compose_files_bucket_path = "app-docker-compose-files/logging/"
+  do_spaces_region          = digitalocean_spaces_bucket.project_bucket.region
+  ecr_base_url              = local.ecr_registry_base_url
+  extra_cloud_init_config   = data.template_file.logging_vm_bootstrap_config.rendered
+  project_bucket_name       = digitalocean_spaces_bucket.project_bucket.name
 }
 
 # ------------------------------------------------------------------------------
@@ -58,11 +60,9 @@ data "template_file" "logging_vm_bootstrap_config" {
   template = file("${path.module}/vm-config-scripts/logging-server-config.tpl")
 
   vars = {
-    ecr_base_url                 = local.ecr_registry_base_url
-    app_docker_compose_bucket_id = aws_s3_bucket.app_docker_composes_bucket.id
-    logging_app_repo_url         = aws_ecr_repository.ecr_repositories["logging-app"].repository_url
-    block_storage_name           = digitalocean_volume.logging_vm_block_storage.name
-    block_storage_mount_name     = replace(digitalocean_volume.logging_vm_block_storage.name, "-", "_") # All dash becomes underscore
+    logging_app_repo_url     = aws_ecr_repository.ecr_repositories["logging-app"].repository_url
+    block_storage_name       = digitalocean_volume.logging_vm_block_storage.name
+    block_storage_mount_name = replace(digitalocean_volume.logging_vm_block_storage.name, "-", "_") # All dash becomes underscore
   }
 }
 
