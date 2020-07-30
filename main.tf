@@ -6,8 +6,8 @@ terraform {
     encrypt        = true
     key            = "global/terraform.tfstate"
     region         = "eu-central-1"
-    bucket         = "gkc-bproject-terraform-backend"
-    dynamodb_table = "gkc-bproject-terraform-lock"
+    bucket         = "gkc-bproject-terraform-backend" # See https://github.com/gucl-bachelor-project/infrastructure-remote-state
+    dynamodb_table = "gkc-bproject-terraform-lock"    # See: https://github.com/gucl-bachelor-project/infrastructure-remote-state
   }
 }
 
@@ -34,19 +34,3 @@ provider "aws" {
 # REFERENCE AWS REGION WHERE AWS RESOURCES MUST BE DEPLOYED IN
 # ------------------------------------------------------------------------------
 data "aws_region" "current" {}
-
-# ------------------------------------------------------------------------------
-# DEPLOY REMOTE TERRAFORM STATE BACKEND
-# ------------------------------------------------------------------------------
-module "s3_backend" {
-  source = "./s3-backend"
-
-  # NOTE:
-  # - Bucket name has to globally unique amongst all AWS users
-  # - Value must match value of 'bucket' in 'backend' block
-  backend_bucket_name = "gkc-bproject-terraform-backend"
-
-  # NOTE:
-  # Value must match value of 'dynamodb' in 'backend' block
-  backend_lock_table_name = "gkc-bproject-terraform-lock"
-}
