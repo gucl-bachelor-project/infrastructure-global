@@ -37,11 +37,6 @@ jobs:
     steps:
       - *restore_repo
       - run:
-          name: Setup variables
-          command: |
-            echo "access_key = \"$AWS_ACCESS_KEY\"
-            secret_key = \"$AWS_SECRET_KEY\"" > terraform.tfvars
-      - run:
           name: Init
           command: terraform init
       - persist_to_workspace:
@@ -86,7 +81,7 @@ jobs:
       - *attach_working_directory
       - run:
           name: Plan
-          command: terraform plan -out=terraform.plan -var "do_api_token=$DO_API_TOKEN"
+          command: terraform plan -out=terraform.plan
       - run:
           name: Save plan in plain format
           command: |
@@ -156,9 +151,10 @@ workflows:
             branches:
               ignore:
                 - master
-      - apply:
-          requires:
-            - plan
-          filters:
-            branches:
-              only: master
+      # Does not work with new SSH connection
+      #- apply:
+          #requires:
+            #- plan
+          #filters:
+            #branches:
+              #only: master
